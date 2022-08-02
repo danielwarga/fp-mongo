@@ -21,21 +21,21 @@ function seedDatabase() {
 // calculate total price of each category
 function categoryTotals() {
     return db.list.aggregate({
-        $group: { _id: "???", total: { "???": "???" } },
+        $group: { _id: "$category", total: { $sum: "$price" } },
     });
 }
 
 // calculate total price of all items
 function totalPrice() {
     return db.list.aggregate({
-        $group: { _id: "???", total: { "???": "???" } },
+        $group: { _id: "", total: { $sum: "$price" } },
     });
 }
 
 // get only items that cost more than x then calculate the price of each matching category
 function categoryTotalsForItemsOver(x) {
     return db.list.aggregate([
-        { "???": { "???": { $gt: "???" } } },
-        { "???": { _id: "$category", total: { $sum: "$price" } } },
+        { $match: { price: { $gt: x } } },
+        { $group: { _id: "$category", total: { $sum: "$price" } } },
     ]);
 }
